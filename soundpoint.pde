@@ -6,7 +6,6 @@ import peasy.*;
 
 int   NUM_POINTS        = 512;
 float ADJUSTMENT_FACTOR = 5;
-float BREAK_FACTOR      = 0.05;
 float BASE_RADIUS       = 150;
 
 Minim minim;
@@ -16,6 +15,8 @@ PeasyCam pCamera;
 
 color white;
 color background_color = color(0, 0, 0);
+
+Flock flock;
 
 SoundPoint[] sound_points = new SoundPoint[NUM_POINTS];
 
@@ -32,10 +33,13 @@ void setup()
 
     minim = new Minim(this);
     // get a line in from Minim, default bit depth is 16
-    AUDIO_IN = minim.getLineIn(Minim.STEREO, NUM_POINTS);
+    AUDIO_IN = minim.getLineIn(Minim.STEREO, 512);
+
+    flock = new Flock();
 
     for(int i=0; i < NUM_POINTS; i++){
         SoundPoint new_point = new SoundPoint(AUDIO_IN, random(0.0, TWO_PI), random(0.0, TWO_PI), BASE_RADIUS, 0, i);
+        flock.addBoid(new_point.boid);
         sound_points[i] = new_point;
     }
 
@@ -47,8 +51,15 @@ void draw()
     background(0);
     translate(width/2, height/2, 0);
 
+    flock.run();
+
     for(int i=0; i < NUM_POINTS; i++){
         sound_points[i].render();
+
+        // if (i==0) {
+        //     println("Phi: "+sound_points[i].boid.location.x);
+        //     println("Theta: "+sound_points[i].boid.location.y);
+        // }
 
         for(int j=0; j < NUM_POINTS; j++){
             if (dist(sound_points[i].x, sound_points[i].y, sound_points[i].z, sound_points[j].x, sound_points[j].y, sound_points[j].z) < 20) {

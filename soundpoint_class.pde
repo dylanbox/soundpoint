@@ -3,20 +3,25 @@ public class SoundPoint extends Position {
     private float intensity;
     private int buffer_index;
 
+    public Boid boid;
+
     // Reference to the Audio Input
     AudioInput audio_in = null;
 
-    public SoundPoint(AudioInput reference_audio, float temp_phi, float temp_theta, float temp_r, float temp_intensity, int temp_buffer_index) {
-        super(temp_phi, temp_theta, temp_r);
+    public SoundPoint(AudioInput reference_audio, float temp_phi, float temp_theta, float temp_radius, float temp_intensity, int temp_buffer_index) {
+        super(temp_phi, temp_theta, temp_radius);
         audio_in     = reference_audio;
         intensity    = AdjustIntensity(temp_intensity);
         buffer_index = temp_buffer_index;
+
+        boid = new Boid(phi, theta);
+
         render();
     }
 
     private float AdjustIntensity(float new_intensity) {
         // Map Intensity
-        new_intensity = map(new_intensity*ADJUSTMENT_FACTOR, -1, 1, -75, 75);
+        new_intensity = map(new_intensity*ADJUSTMENT_FACTOR, -1, 1, BASE_RADIUS/-3, BASE_RADIUS/3);
 
         // Ease Intensity
         new_intensity = ease(intensity, new_intensity);
@@ -28,7 +33,8 @@ public class SoundPoint extends Position {
         // Get the intensity from the line in and adjust
         intensity = AdjustIntensity(audio_in.left.get(buffer_index));
 
-        movePosition(phi, theta, (r + intensity));
+        // for now x=phi and y=theta
+        movePosition(boid.location.x, boid.location.y, (radius + intensity));
 
         stroke(255);
         strokeWeight(2);

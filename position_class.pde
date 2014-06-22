@@ -1,28 +1,28 @@
 public class Position {
     // Polar Points
-    public float phi   = 0;
-    public float theta = 0;
-    public float r     = 0;
+    public float phi    = 0;
+    public float theta  = 0;
+    public float radius = 0;
 
     // Cartesian Points
     public float x = 0;
     public float y = 0;
     public float z = 0;
 
-    Position(float temp_phi, float temp_theta, float temp_r){
-        phi   = temp_phi;
-        theta = temp_theta;
-        r     = temp_r;
+    Position(float temp_phi, float temp_theta, float temp_radius){
+        phi    = temp_phi;
+        theta  = temp_theta;
+        radius = temp_radius;
 
-        movePosition(phi, theta, r);
+        movePosition(phi, theta, radius);
     }
 
-    void movePosition(float new_phi, float new_theta, float new_r) {
+    void movePosition(float new_phi, float new_theta, float new_radius) {
         // Converts from cartesian to polar points
 
-        x = new_r * cos(new_phi) * sin(new_theta);
-        y = new_r * sin(new_phi) * sin(new_theta);
-        z = new_r * cos(new_theta);
+        x = new_radius * cos(new_phi) * sin(new_theta);
+        y = new_radius * sin(new_phi) * sin(new_theta);
+        z = new_radius * cos(new_theta);
     }
 
 }
